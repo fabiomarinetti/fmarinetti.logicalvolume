@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/fabiomarinetti/fmarinetti.logicalvolume.svg?branch=master)](https://travis-ci.org/fabiomarinetti/logicalvolume)
+[![Build Status](https://travis-ci.com/fabiomarinetti/fmarinetti.logicalvolume.svg?branch=master)](https://travis-ci.com/fabiomarinetti/fmarinetti.logicalvolume)
 
 Role Name
 =========
