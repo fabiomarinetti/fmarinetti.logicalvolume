@@ -1,9 +1,7 @@
 [![Build Status](https://travis-ci.com/fabiomarinetti/fmarinetti.logicalvolume.svg?branch=master)](https://travis-ci.com/fabiomarinetti/fmarinetti.logicalvolume)
 
-Role Name
-=========
-
 fmarinetti.logicalvolume
+=========
 
 This role creates a dedicated volume from a new partition to mount on a desired mountpoint
 
