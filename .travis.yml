@@ -35,7 +35,7 @@ before_install:
 
   # decrypt service-account-key   
   - openssl aes-256-cbc -K $encrypted_9fec4dc847b1_key -iv $encrypted_9fec4dc847b1_iv
-     -in ${GOOGLE_APPLICATION_CREDENTIALS}.enc -out ${GOOGLE_APPLICATION_CREDENTIALS} -d 
+   -in ${GOOGLE_APPLICATION_CREDENTIALS}.enc -out ${GOOGLE_APPLICATION_CREDENTIALS} -d   
 
   # authenticate gce
   #- gcloud auth activate-service-account --key-file ${GOOGLE_APPLICATION_CREDENTIALS}
@@ -78,5 +78,5 @@ script:
   - molecule lint
   - ansible-playbook -i inventory tests/test.yml 
 
-post_script:
+after_script:
   - terraform destroy -auto-approve
