@@ -1,0 +1,18 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: gce
+platforms:
+  - name: gce-centos7
+    zone: us-east1-c
+    image: centos-7-v20200309 
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+  flake8
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
