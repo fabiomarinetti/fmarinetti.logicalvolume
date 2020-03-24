@@ -3,12 +3,7 @@ language: python
 python:
   - "3.6"
 env:
-  - >-
-    PATH=$PATH:$HOME/bin 
-    GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/secret.json 
-    GCE_PROJECT_ID=ansible-swarm-271617 
-    TF_VERSION=0.12.24
-    SSH_USER=mpisellonio
+  - PATH=$PATH:$HOME/bin GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/secret.json GCE_PROJECT_ID=ansible-swarm-271617 TF_VERSION=0.12.24 SSH_USER=mpisellonio
     
 before_install:
   # ENCRYPT YOUR PRIVATE KEY (If you need authentication)
