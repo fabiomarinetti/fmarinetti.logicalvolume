@@ -33,6 +33,7 @@ before_install:
   #  fi
   #- gcloud -q components update
 
+  - [ -e ${GOOGLE_APPLICATION_CREDENTIALS}.enc ] && echo ciao || echo miao      
   # decrypt service-account-key   
   - openssl aes-256-cbc -K $encrypted_9fec4dc847b1_key -iv $encrypted_9fec4dc847b1_iv -in ${GOOGLE_APPLICATION_CREDENTIALS}.enc -out ${GOOGLE_APPLICATION_CREDENTIALS}.json -d 
 
