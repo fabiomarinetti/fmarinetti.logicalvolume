@@ -1,15 +1,15 @@
 provider "google" {
   credentials = file("secret.json")
-  project     = "${var.project_id}"
-  region = "${var.region}"
+  project     = var.project_id
+  region = var.region
 }
 
 resource "google_compute_disk" "volume" {
-  name  = "${var.volume_name}"
-  type  = "${var.disk_type}"
-  zone  = "${var.zone}"
-  physical_block_size_bytes = "${var.block_size}"
-  size = "${var.disk_size}"
+  name  = var.volume_name
+  type  = var.disk_type
+  zone  = var.zone
+  physical_block_size_bytes = var.block_size
+  size = var.disk_size
 }
 
 resource "google_compute_attached_disk" "attach_volume" {
@@ -18,13 +18,13 @@ resource "google_compute_attached_disk" "attach_volume" {
 }
 
 resource "google_compute_instance" "instance" {
-  name         = "${var.instance_name}"
-  machine_type = "${var.instance_type}"
-  zone = "${var.zone}"
+  name         = var.instance_name
+  machine_type = var.instance_type
+  zone = var.zone
 
   boot_disk {
     initialize_params {
-      image = "${var.image}"
+      image = var.image
     }
   }
 
@@ -49,7 +49,7 @@ resource "google_compute_instance" "instance" {
 }
 
 output "inventory" {
-  value       = "[${var.instance_name}]\ninstance ansible_host=${google_compute_instance.instance.network_interface[0].access_config[0].nat_ip} ansible_user=${SSH_USER} ansible_ssh_private_key_file=${SSH_KEY} ansible_ssh_common_args='-o StrictHostKeyChecking=no' "
-  description = "The public IP of the web server"
+  value       = "[${google_compute_instance.instance.name}]\ninstance ansible_host=${google_compute_instance.instance.network_interface[0].access_config[0].nat_ip} ansible_user=${var.ssh_user} ansible_ssh_private_key_file=${var.ssh_key_file} ansible_ssh_common_args='-o StrictHostKeyChecking=no'"
+  description = "The inventory string to feed ansible with"
 }
 
