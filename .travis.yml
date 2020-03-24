@@ -32,6 +32,7 @@ before_install:
   #    cd $TRAVIS_BUILD_DIR;
   #  fi
   #- gcloud -q components update
+  - env
 
   - [ -e ${GOOGLE_APPLICATION_CREDENTIALS}.enc ] && echo ciao || echo miao      
   # decrypt service-account-key   
