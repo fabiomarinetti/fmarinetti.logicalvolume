@@ -31,7 +31,7 @@ before_install:
 
   - if [ -e ${GOOGLE_APPLICATION_CREDENTIALS}.enc ]; then echo ciao; else echo miao; fi      
   # decrypt service-account-key   
-  - openssl aes-256-cbc -K $encrypted_9fec4dc847b1_key -iv $encrypted_9fec4dc847b1_iv -in ${GOOGLE_APPLICATION_CREDENTIALS}.enc -out ${GOOGLE_APPLICATION_CREDENTIALS}.json -d 
+  - openssl aes-256-cbc -K $encrypted_9fec4dc847b1_key -iv $encrypted_9fec4dc847b1_iv -in ${GOOGLE_APPLICATION_CREDENTIALS}.enc -out ${GOOGLE_APPLICATION_CREDENTIALS}.json -d
 
   # authenticate gce
   #- gcloud auth activate-service-account --key-file ${GOOGLE_APPLICATION_CREDENTIALS}
