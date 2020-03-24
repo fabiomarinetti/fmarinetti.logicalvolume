@@ -41,7 +41,7 @@ before_install:
 
   # install and initialize terraform CLI
   - wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
-  - mkdir ${HOME}/bin  
+  - mkdir -p ${HOME}/bin  
   - unzip -d ${HOME}/bin terraform_${TF_VERSION}_linux_amd64.zip
   - terraform init  
 
