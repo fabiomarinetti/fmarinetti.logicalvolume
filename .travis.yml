@@ -2,77 +2,25 @@
 language: python
 python:
   - "3.6"
+
 env:
-  - PATH=$PATH:$HOME/bin GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/secret.json GCE_PROJECT_ID=ansible-swarm-271617 TF_VERSION=0.12.24 SSH_USER=mpisellonio
-    
+  - GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/secret.json SSH_USER=mpisellonio SSH_ID_FILE=$TRAVIS_BUILD_DIR/.ssh/id_rsa SCENARIO=gcp
+
 before_install:
-  # ENCRYPT YOUR PRIVATE KEY (If you need authentication)
-  # 1. Install and login to the Travis CLI:
-  #       $ gem install travis
-  #       $ travis login
-  # 2. Move your json private key to secret.json
-  # 3. Run:
-  #       $ travis encrypt-file secret.json --add
-  # 4. Commit changes:
-  #       $ git add secret.json.enc
-  #       $ git commit secret.json.enc .travis.yml
-  #
-  # install gcloud cli
-  #  - if [ ! -d $HOME/gcloud/google-cloud-sdk ]; then
-  #    mkdir -p $HOME/gcloud &&
-  #    wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz --directory-prefix=$HOME/gcloud &&
-  #    cd $HOME/gcloud &&
-  #    tar xzf google-cloud-sdk.tar.gz &&
-  #    printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh &&
-  #    cd $TRAVIS_BUILD_DIR;
-  #  fi
-  #- gcloud -q components update
-  - env
+  # decrypt service-account-key
+  - openssl aes-256-cbc -K $encrypted_297aa543cc91_key -iv $encrypted_297aa543cc91_iv -in ${GOOGLE_APPLICATION_CREDENTIALS}.enc -out ${GOOGLE_APPLICATION_CREDENTIALS} -d
 
-  - if [ -e ${GOOGLE_APPLICATION_CREDENTIALS}.enc ]; then echo ciao; else echo miao; fi      
-  # decrypt service-account-key   
-  - openssl aes-256-cbc -K $encrypted_9fec4dc847b1_key -iv $encrypted_9fec4dc847b1_iv -in ${GOOGLE_APPLICATION_CREDENTIALS}.enc -out ${GOOGLE_APPLICATION_CREDENTIALS}.json -d
-
-  # authenticate gce
-  #- gcloud auth activate-service-account --key-file ${GOOGLE_APPLICATION_CREDENTIALS}
-
-  # set project_id
-  #- gcloud config set project $GCP_GCE_PROJECT_ID
-
-  # install and initialize terraform CLI
-  - wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
-  - mkdir -p ${HOME}/bin  
-  - unzip -d ${HOME}/bin terraform_${TF_VERSION}_linux_amd64.zip
-  - terraform init  
-
-services:
-  - docker
 install:
-  # install molecule and docker      
-  - pip install molecule docker 
+  # install molecule and docker
+  - pip install molecule requests google-auth ansible-lint flake8
+ 
+  # create .ssh dir
+  - mkdir -p .ssh
 
-  # install linting tools 
-  - pip install ansible-lint flake8
-  
   # generate ssh key
-  - ssh-keygen -P '' -f ${HOME}/.ssh/id_rsa -C ${SSH_USER}  
-    
-  # terraforming nodes
-  - terraform apply -var "ssh_user=${SSH_USER}" -var "ssh_pub_key_file=${HOME}/.ssh/id_rsa.pub" -var "ssh_key_file=${HOME}/.ssh/id_rsa" -auto-approve terraform
-
-  # create inventory file
-  - terraform output --state-path=${TRAVIS_BUILD_DIR}/terraform/terraform.tfstate inventory > ${TRAVIS_BUILD_DIR}/inventory  
-  
-  # order the virtual machine
-#gcloud compute instances create myhost --image centos-7-v20200309 --image-project centos-cloud --preemptible --zone us-east1-c                      
-#gcloud compute ssh --zone us-east1-c fabio_marinetti81@myhost
-  
+  - ssh-keygen -P '' -f ${SSH_ID_FILE} -C ${SSH_USER}
 
 script:
   - molecule --version
   - ansible --version
-  - molecule lint
-  - ansible-playbook -i ${TRAVIS_BUILD_DIR}/inventory ${TRAVIS_BUILD_DIR}/tests/test.yml 
-
-after_script:
-  - terraform destroy -auto-approve
+  - molecule test --scenario-name=${SCENARIO}

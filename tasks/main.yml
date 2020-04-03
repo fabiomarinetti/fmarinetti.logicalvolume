@@ -1,5 +1,10 @@
 ---
 # tasks file for fmarinetti.logicalvolume
+- name: install lvm2
+  package:
+    name: lvm2
+    state: present
+
 - name: "retrieve {{ device }} info"
   parted:
     device: "{{ device }}"
@@ -14,7 +19,7 @@
     device: "{{ device }}"
     number: "{{ partno }}"
     state: present
-    part_start: "{{ device_info['partitions'][-1]['end']+1 }}KiB"
+    part_start: "{% if device_info['partitions']|length != 0 %}{{ device_info['partitions'][-1]['end']+1 }}KiB{% else %}0%{% endif %}"
     part_end: "{{ part_end }}"
   notify:
     - reboot host
