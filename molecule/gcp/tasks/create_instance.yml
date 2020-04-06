@@ -24,7 +24,7 @@
     zone: "{{ molecule_yml.driver.zone }}"
     state: present
   register: new_disk
-    
+
 - name: create boot disk
   gcp_compute_disk:
     name: "{{ item.name }}"

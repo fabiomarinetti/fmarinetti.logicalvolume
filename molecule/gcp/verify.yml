@@ -12,6 +12,7 @@
   - name: run pvscan
     command: pvscan
     register: output
+    changed_when: output.rc == 0
 
   - name: check /dev/sdb1 pv exists
     assert:
@@ -20,6 +21,7 @@
   - name: run vgscan
     command: vgscan
     register: output
+    changed_when: output.rc == 0
 
   - name: check ansible_vg vg exists
     assert:
@@ -28,6 +30,7 @@
   - name: run lvscan
     command: lvscan
     register: output
+    changed_when: output.rc == 0
 
   - name: check ansible_lv lv exists
     assert:
